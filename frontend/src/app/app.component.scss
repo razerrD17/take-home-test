@@ -23,6 +23,32 @@
   }
 }
 
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+
+  p {
+    margin-top: 16px;
+    color: #666;
+  }
+}
+
+.error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+
+  .error-message {
+    color: #f44336;
+    margin-bottom: 16px;
+  }
+}
+
 @media (max-width: 992px) {
   .loans {
     &--container {

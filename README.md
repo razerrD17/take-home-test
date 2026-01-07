@@ -1,83 +1,144 @@
-# **Take-Home Test: Backend-Focused Full-Stack Developer (.NET C# & Angular)**
+# Fundo - Loan Management System
 
-## **Objective**
+A full-stack **Loan Management System** built with **.NET 6 (C#)** backend and **Angular 19** frontend.
 
-This take-home test evaluates your ability to develop and integrate a .NET Core (C#) backend with an Angular frontend, focusing on API design, database integration, and basic DevOps practices.
+## Project Structure
 
-## **Instructions**
+```
+├── backend/                    # .NET 6 REST API
+│   ├── src/                    # Source code (Clean Architecture)
+│   │   ├── Fundo.Domain/       # Entities and interfaces
+│   │   ├── Fundo.Services/     # Business logic layer
+│   │   ├── Fundo.Infrastructure/  # Data access layer
+│   │   ├── Fundo.Applications.WebApi/  # API controllers
+│   │   └── Fundo.Services.Tests/  # Unit tests
+│   └── Dockerfile              # Backend containerization
+│
+├── frontend/                   # Angular 19 application
+│   └── src/app/                # Components, services, models
+│
+├── .github/workflows/          # CI/CD pipelines
+│   └── backend-ci.yml          # Backend build & test pipeline
+│
+└── docker-compose.yml          # Full stack orchestration
+```
 
-1.  **Fork the provided repository** before starting the implementation.
-2.  Implement the requested features in your forked repository.
-3.  Once you have completed the implementation, **send the link** to your forked repository via email for review.
+## Features
 
-## **Task**
+### Backend
+- **Clean Architecture** with domain-driven design
+- **JWT Authentication** for secure API access
+- **Entity Framework Core** with SQL Server
+- **AutoMapper** for entity-to-DTO mapping
+- **FluentValidation** for request validation
+- **Structured Logging** with Serilog
+- **Unit Tests** (16 tests with xUnit, Moq, FluentAssertions)
+- **Docker Support** with multi-stage builds
+- **CI/CD Pipeline** with GitHub Actions
 
-You will build a simple **Loan Management System** with a **.NET Core backend (C#)** exposing RESTful APIs and a **basic Angular frontend** consuming these APIs.
+### Frontend
+- **Angular 19** with standalone components
+- **Responsive UI** displaying loan data in a table
+- **HTTP Client** integration with backend API
+- **Environment Configuration** for API URLs
 
----
+## Quick Start
 
-## **Requirements**
+### Using Docker (Recommended)
+**Backend**
 
-### **1. Backend (API) - .NET Core**
+```sh
+# Start the entire stack (SQL Server + Backend API)
+docker-compose up --build
+```
 
-* Create a **RESTful API** in .NET Core to handle **loan applications**.
-* Implement the following endpoints:
-    * `POST /loans` → Create a new loan.
-    * `GET /loans/{id}` → Retrieve loan details.
-    * `GET /loans` → List all loans.
-    * `POST /loans/{id}/payment` → Deduct from `currentBalance`.
-* Loan example (feel free to improve it):
+- **Backend API**: http://localhost:5000 (Swagger UI at root)
+- **SQL Server**: localhost:1434
 
-    ```json
-    {
-        "amount": 1500.00, // Amount requested
-        "currentBalance": 500.00, // Remaining balance
-        "applicantName": "Maria Silva", // User name
-        "status": "active" // Status can be active or paid
-    }
-    ```
+**Frontend**
+```sh
+# install dependencies only first time
+npm install
+```
 
-* Use **Entity Framework Core** with **SQL Server**.
-* Create seed data to populate the loans (the frontend will consume this).
-* Write **unit/integration tests for the API** (xUnit or NUnit).
-* **Dockerize** the backend and create a **Docker Compose** file.
-* Create a README with setup instructions.
+```sh
+# up angular app
+npm start
+```
 
-### **2. Frontend - Angular (Simplified UI)**  
+- **Frontend**: `http://localhost:4200/` in your browser.
 
-Develop a **lightweight Angular app** to interact with the backend
+### Running Locally and more details
 
-#### **Features:**  
-- A **table** to display a list of existing loans.  
+See individual READMEs for detailed instructions:
+- [Backend README](backend/src/README.md)
+- [Frontend README](frontend/README.md)
 
-#### **Mockup:**  
-[View Mockup](https://kzmgtjqt0vx63yji8h9l.lite.vusercontent.net/)  
-(*The design doesn’t need to be an exact replica of the mockup—it serves as a reference. Aim to keep it as close as possible.*)  
+## API Endpoints
 
----
+| Method | Endpoint | Description | Auth |
+|--------|----------|-------------|------|
+| POST | `/auth/login` | Get JWT token | No |
+| GET | `/loans` | List all loans | No |
+| GET | `/loans/{id}` | Get loan by ID | Yes |
+| POST | `/loans` | Create new loan | Yes |
+| POST | `/loans/{id}/payment` | Make payment | Yes |
 
-## **Bonus (Optional, Not Required)**
+## Default Credentials
 
-* **Improve error handling and logging** with structured logs.
-* Implement **authentication**.
-* Create a **GitHub Actions** pipeline for building and testing the backend.
+| Username | Password | Role |
+|----------|----------|------|
+| admin | Admin@123 | Admin |
+| demo | Demo@123 | User |
 
----
+## Technology Stack
 
-## **Evaluation Criteria**
+| Layer | Technologies |
+|-------|-------------|
+| Backend | .NET 6, Entity Framework Core, SQL Server, AutoMapper, FluentValidation, Serilog, BCrypt, JWT |
+| Frontend | Angular 19, TypeScript, RxJS |
+| DevOps | Docker, Docker Compose, GitHub Actions |
+| Testing | xUnit, Moq, FluentAssertions |
 
-✔ **Code quality** (clean architecture, modularization, best practices).
+## Implementation Approach
 
-✔ **Functionality** (the API and frontend should work as expected).
+### Architecture Decisions
+- **Clean Architecture**: Chose this pattern to ensure separation of concerns, testability, and maintainability. The domain layer has no external dependencies, making business logic easy to test and modify.
+- **Repository Pattern**: Abstracts data access, allowing easy swapping of data providers and simplified unit testing with mocks.
+- **ServiceResult Pattern**: Provides consistent error handling across all services without relying on exceptions for control flow.
+- **Standalone Components (Angular)**: Used Angular 19's modern standalone component approach instead of NgModules for simpler, more modular code.
 
-✔ **Security considerations** (authentication, validation, secure API handling).
+### Challenges Faced
+- **Docker SQL Server Health Checks**: Initial setup required proper health check configuration to ensure the API waits for SQL Server to be fully ready before starting.
+- **Port Conflicts**: Local SQL Server instances can conflict with Docker containers; resolved by using external port 1434.
+- **EF Core Migrations in Docker**: Ensured migrations run automatically on startup via DbInitializer to simplify deployment.
 
-✔ **Testing coverage** (unit tests for critical backend functions).
+### Bonus Features Completed
+- **Structured Logging**: Implemented Serilog with enrichers, request logging middleware, and TraceId for request correlation.
+- **JWT Authentication**: Full authentication system with login endpoint, BCrypt password hashing, and protected endpoints.
+- **GitHub Actions CI/CD**: Automated pipeline for building and testing the backend on every push/PR.
 
-✔ **Basic DevOps implementation** (Docker for backend).
+## Future Improvements
 
----
+Given more time, the following enhancements could be made:
 
-## **Additional Information**
+### Backend
+- Add integration tests with TestContainers for database testing
+- Implement refresh tokens for better session management
+- Add rate limiting and request throttling
+- Implement pagination for the loans list endpoint
+- Add role-based authorization (Admin vs User permissions)
+- Add audit logging for loan modifications
 
-Candidates are encouraged to include a `README.md` file in their repository detailing their implementation approach, any challenges they faced, features they couldn't complete, and any improvements they would make given more time. Ideally, the implementation should be completed within **two days** of starting the test.
+### Frontend
+- Implement login page and token management
+- Add create loan and make payment forms
+- Add loading states and error handling UI
+- Implement responsive design for mobile devices
+- Add unit tests with Jasmine/Karma
+
+### DevOps
+- Add frontend to Docker Compose
+- Implement multi-environment configurations (staging, production)
+- Add database backup/restore scripts
+- Implement health check endpoints for container orchestration

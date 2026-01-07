@@ -44,8 +44,11 @@ project.assets.json
 *.pfx
 *.p12
 
-# Entity Framework Migrations
-migrations/
+# Entity Framework Migrations (keep structure, ignore generated)
+**/Migrations/*.Designer.cs
+
+# User secrets
+secrets.json
 
 # --- ANGULAR / TypeScript ---
 node_modules/
@@ -57,6 +60,10 @@ pnpm-lock.yaml
 .npmrc
 .npm/
 .nodemon-debug.json
+
+# Angular cache
+.angular/
+.angular/cache/
 
 # IDEs and editors
 /.idea/
@@ -71,9 +78,9 @@ pnpm-debug.log*
 lerna-debug.log*
 
 # Build files
-/.angular/
 out-tsc/
 .DS_Store
+Thumbs.db
 
 # Environment and credentials
 .env
@@ -85,3 +92,27 @@ karma.conf.js
 test-report/
 junit.xml
 mocha.json
+e2e/
+
+# TypeScript
+*.tsbuildinfo
+
+# --- Docker ---
+docker-compose.override.yml
+.docker/
+
+# --- OS Generated ---
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# --- Misc ---
+*.cache
+*.temp
+.sass-cache/
+connect.lock
+libpeerconnection.log
